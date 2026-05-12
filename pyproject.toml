@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veco-ai"
+version = "0.2.0"
+description = "Multimodal vectorization and local RAG toolkit with FAISS and Ollama"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "CC0-1.0" }
+authors = [
+  { name = "veco-ai contributors" }
+]
+keywords = ["rag", "faiss", "ollama", "vector-search", "multimodal", "whisper"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "numpy>=2.0",
+  "scipy>=1.14",
+  "torch>=2.6",
+  "torchaudio>=2.6",
+  "sentence-transformers>=3.0,<4.0",
+  "faiss-cpu>=1.9",
+  "unstructured[all-docs]>=0.15",
+  "faster-whisper>=1.2,<2.0",
+  "scenedetect>=0.6",
+  "opencv-python>=4.8",
+  "trimesh>=4.0,<5.0",
+  "ollama>=0.4",
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "python-multipart>=0.0.12",
+  "Pillow>=11.0,<12.0",
+  "tqdm>=4.66,<5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "build>=1.2",
+]
+diarization = [
+  "pyannote.audio>=3.3",
+]
+docling = [
+  "docling>=2.5",
+]
+
+[project.scripts]
+veco-ai = "veco_ai.veco_ai:main"
+veco-ai-server = "veco_ai.veco_server:main"
+
+[tool.setuptools.packages.find]
+include = ["veco_ai*"]
+
+[tool.setuptools]
+include-package-data = false

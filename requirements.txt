@@ -1,0 +1,80 @@
+# Python >= 3.13
+#
+# ── Setup-Reihenfolge ────────────────────────────────────────────────────────
+# setup_venv.ps1 installiert alles automatisch in der richtigen Reihenfolge.
+# Manuell:
+#   1. Torch zuerst (aus dem PyTorch-Index, nicht PyPI):
+#        pip install torch torchaudio \
+#          --index-url https://download.pytorch.org/whl/cu128   # CUDA 12.8
+#        # CPU-only:
+#          --index-url https://download.pytorch.org/whl/cpu
+#
+#   2. ASR:
+#        pip install faster-whisper
+#
+#   3. Rest:
+#        pip install -r requirements.txt
+#
+# ── System-Abhängigkeiten (müssen im PATH sein) ───────────────────────────────
+#   ffmpeg      — Audio/Video-Dekodierung (faster-whisper, Frame-Extraktion)
+#   tesseract   — OCR-Fallback für unstructured (optional)
+#
+# ── Speaker-Diarisierung (optional) ──────────────────────────────────────────
+#   pyannote.audio ist absichtlich nicht in den Basis-Requirements, weil seine
+#   lightning-Abhängigkeit auf manchen Python-3.13/Windows-Setups nicht
+#   auflösbar ist. Wenn verfügbar:
+#        pip install pyannote.audio
+#   Dann Bedingungen akzeptieren und Token setzen:
+#        huggingface.co/pyannote/speaker-diarization-3.1
+#        $env:HF_TOKEN = "hf_..."
+#
+# ── Embedding-Modell-Übersicht ────────────────────────────────────────────────
+#   Standard:   BAAI/bge-m3                  1024-dim, multilingual SotA
+#   Leichter:   intfloat/multilingual-e5-large 1024-dim
+#   Test:       all-MiniLM-L6-v2             384-dim, schnell
+#   CLIP-Suche (use_clip=True) benötigt sentence-transformers >=3.3
+
+# ── Core ML ──────────────────────────────────────────────────────────────────
+numpy>=2.0
+scipy>=1.14
+# torch & torchaudio: keine obere Schranke damit setup_venv.ps1 die neueste
+# kompatible Version aus dem PyTorch-Index installieren kann.
+torch>=2.6
+torchaudio>=2.6
+# sentence-transformers >=3.3 für CLIP (use_clip=True); >=3.0 genügt sonst
+sentence-transformers>=3.0,<4.0
+faiss-cpu>=1.9
+
+# ── Dokumenten-Parsing ───────────────────────────────────────────────────────
+unstructured[all-docs]>=0.15
+# PDF fallback (no unstructured_inference / detectron2 needed)
+pymupdf>=1.24
+# DOC/DOCX fallback (no LibreOffice needed)
+mammoth>=1.7
+
+# ── Dokumenten-Parsing: docling (optional, bessere Tabellen/Layout-Extraktion)
+# docling>=2.5
+
+# ── ASR ─────────────────────────────────────────────────────────────────────
+# Standard-Modell: large-v3-turbo (4× schneller als large-v3)
+# CPU-Tipp: audio_model_size="base" oder "small"
+faster-whisper>=1.2,<2.0
+
+# ── Video-Szenerkennung ──────────────────────────────────────────────────────
+scenedetect>=0.6
+opencv-python>=4.8
+
+# ── CAD — Mesh-Formate (STL, OBJ, PLY, GLB, …) ──────────────────────────────
+trimesh>=4.0,<5.0
+
+# ── Multimodal Vision + RAG ──────────────────────────────────────────────────
+ollama>=0.4
+
+# ── REST-API-Server (veco_server.py) ─────────────────────────────────────────
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.12
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+Pillow>=11.0,<12.0
+tqdm>=4.66,<5.0
