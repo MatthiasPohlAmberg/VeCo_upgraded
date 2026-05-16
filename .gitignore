@@ -242,3 +242,5 @@ __marimo__/
 .venv/
 
 .claude/
+test/vector_db_fwk_fast.json
+test/vector_db_fwk_prod.json
